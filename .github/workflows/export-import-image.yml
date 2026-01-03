@@ -41,8 +41,8 @@ jobs:
 
       - name: Export container to tar file
         run: |
-          docker export ${CONTAINER_ID} > ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}.tar
-          echo "Exported container to ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}.tar"
+          docker export ${CONTAINER_ID} > ${{ env.IMAGE_NAME }}_${{ env.HA_VERSION }}.tar
+          echo "Exported container to ${{ env.IMAGE_NAME }}_${{ env.HA_VERSION }}.tar"
 
       - name: Stop and remove container
         run: |
@@ -52,8 +52,8 @@ jobs:
 
       - name: Import tar as new image
         run: |
-          docker import ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}.tar ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}
-          echo "Imported tar as ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}"
+          docker import ${{ env.IMAGE_NAME }}_${{ env.HA_VERSION }}.tar ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}
+          echo "Imported tar as ${{ env.IMAGE_NAME }}_${{ env.HA_VERSION }}.tar as ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}"
 
       - name: Get new image size
         run: |
@@ -87,5 +87,5 @@ jobs:
           name: home-assistant-image-${{ env.HA_VERSION }}
           path: |
             ${{ env.IMAGE_NAME }}-${{ env.HA_VERSION }}-final.tar
-            ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}.tar
+            ${{ env.IMAGE_NAME }}_${{ env.HA_VERSION }}.tar
           retention-days: 30
