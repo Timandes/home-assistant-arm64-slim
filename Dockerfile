@@ -1,5 +1,5 @@
 ARG HA_VERSION=2025.12.5
-FROM ghcr.io/home-assistant/home-assistant:${HA_VERSION}
+FROM home-assistant-arm64-slim:${HA_VERSION}
 
 # Set labels for the image
 LABEL maintainer="Timandes"
