@@ -87,30 +87,20 @@ jobs:
           echo "SIZE_REDUCTION=${REDUCTION}%" >> $GITHUB_ENV
           echo "镜像大小减少: ${REDUCTION}%"
 
-      - name: Check and create builder with docker driver
+      - name: Create builder with docker-container driver
         run: |
-          # Check if a builder with docker driver already exists
-          if ! docker buildx inspect default | grep -q "Driver: docker"; then
-            # Create a new builder with docker driver if default doesn't use it
-            docker buildx create --use --driver docker --name local-builder
-            echo "BUILDER_NAME=local-builder" >> $GITHUB_ENV
-          else
-            # Use the default builder if it already uses docker driver
-            docker buildx use default
-            echo "BUILDER_NAME=default" >> $GITHUB_ENV
-          fi
+          # Create a new builder with docker-container driver
+          docker buildx create --use --driver docker-container --name container-builder
+          echo "BUILDER_NAME=container-builder" >> $GITHUB_ENV
 
-      - name: Build and push Docker image using buildx
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          builder: ${{ env.BUILDER_NAME }}
-          platforms: linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            HA_VERSION=${{ env.HA_VERSION }}
+      - name: Tag and push local image directly
+        run: |
+          # Tag the local image for GitHub Container Registry
+          docker tag home-assistant-arm64-slim:${{ env.HA_VERSION }} ghcr.io/${{ github.repository }}:${{ env.HA_VERSION }}
+          
+          # Push the image directly
+          docker push ghcr.io/${{ github.repository }}:${{ env.HA_VERSION }}
+          echo "Pushed image to GitHub Container Registry"
 
       - name: Output final message
         run: |
