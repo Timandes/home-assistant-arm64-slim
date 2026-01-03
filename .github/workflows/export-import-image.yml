@@ -12,7 +12,7 @@ on:
 env:
   HA_VERSION: ${{ inputs.ha_version }}
   IMAGE_NAME: home-assistant-arm64-slim
-  GHCR_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/home-assistant-arm64-slim
+  GHCR_IMAGE_NAME: ghcr.io/${{ lowercase(github.repository_owner) }}/home-assistant-arm64-slim
 
 jobs:
   export-import:
