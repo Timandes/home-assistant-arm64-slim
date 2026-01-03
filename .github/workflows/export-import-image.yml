@@ -95,12 +95,17 @@ jobs:
 
       - name: Tag and push local image directly
         run: |
+          # Convert repository name to lowercase
+          REPO_NAME=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')
+          
           # Tag the local image for GitHub Container Registry
-          docker tag home-assistant-arm64-slim:${{ env.HA_VERSION }} ghcr.io/${{ github.repository }}:${{ env.HA_VERSION }}
+          docker tag home-assistant-arm64-slim:${{ env.HA_VERSION }} ghcr.io/${REPO_NAME}:${{ env.HA_VERSION }}
           
           # Push the image directly
-          docker push ghcr.io/${{ github.repository }}:${{ env.HA_VERSION }}
+          docker push ghcr.io/${REPO_NAME}:${{ env.HA_VERSION }}
           echo "Pushed image to GitHub Container Registry"
+          echo "镜像已推送到GitHub Container Registry，可以使用以下命令拉取："
+          echo "docker pull ghcr.io/${REPO_NAME}:${{ env.HA_VERSION }}"
 
       - name: Output final message
         run: |
