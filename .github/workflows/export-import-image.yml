@@ -27,6 +27,12 @@ jobs:
         run: |
           docker pull --platform linux/arm64 ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }}
 
+      - name: Get original image size
+        run: |
+          ORIGINAL_SIZE=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }} | tail -n 1 | awk '{print $2}')
+          echo "ORIGINAL_SIZE=${ORIGINAL_SIZE}" >> $GITHUB_ENV
+          echo "原始镜像大小: ${ORIGINAL_SIZE}"
+
       - name: Start container and get container ID
         run: |
           CONTAINER_ID=$(docker run --platform linux/arm64 -d ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }} sleep infinity)
@@ -49,9 +55,26 @@ jobs:
           docker import ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}.tar ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}
           echo "Imported tar as ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}"
 
+      - name: Get new image size
+        run: |
+          NEW_SIZE=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }} | tail -n 1 | awk '{print $2}')
+          echo "NEW_SIZE=${NEW_SIZE}" >> $GITHUB_ENV
+          echo "新镜像大小: ${NEW_SIZE}"
+
       - name: Verify imported image
         run: |
           docker images ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}
+
+      - name: Calculate size reduction percentage
+        run: |
+          # Convert sizes to bytes for calculation
+          ORIGINAL_SIZE_BYTES=$(echo "${{ env.ORIGINAL_SIZE }}" | sed 's/GB/*1024*1024*1024/g; s/MB/*1024*1024/g; s/KB/*1024/g; s/B//g' | bc)
+          NEW_SIZE_BYTES=$(echo "${{ env.NEW_SIZE }}" | sed 's/GB/*1024*1024*1024/g; s/MB/*1024*1024/g; s/KB/*1024/g; s/B//g' | bc)
+          
+          # Calculate percentage reduction
+          REDUCTION=$(echo "scale=2; ((${ORIGINAL_SIZE_BYTES} - ${NEW_SIZE_BYTES}) * 100) / ${ORIGINAL_SIZE_BYTES}" | bc)
+          echo "SIZE_REDUCTION=${REDUCTION}%" >> $GITHUB_ENV
+          echo "镜像大小减少: ${REDUCTION}%"
 
       - name: Save image
         run: |
