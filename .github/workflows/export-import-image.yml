@@ -111,8 +111,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             HA_VERSION=${{ env.HA_VERSION }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Output final message
         run: |
