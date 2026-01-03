@@ -87,15 +87,23 @@ jobs:
           echo "SIZE_REDUCTION=${REDUCTION}%" >> $GITHUB_ENV
           echo "镜像大小减少: ${REDUCTION}%"
 
-      - name: Tag local image for GitHub Container Registry
+      - name: Create builder with docker driver
         run: |
-          docker tag home-assistant-arm64-slim:${{ env.HA_VERSION }} ghcr.io/${{ github.repository }}:${{ env.HA_VERSION }}
-          echo "Tagged local image as ghcr.io/${{ github.repository }}:${{ env.HA_VERSION }}"
+          docker buildx create --use --driver docker --name local-builder
 
-      - name: Push image to GitHub Container Registry
-        run: |
-          docker push ghcr.io/${{ github.repository }}:${{ env.HA_VERSION }}
-          echo "Pushed image to GitHub Container Registry"
+      - name: Build and push Docker image using buildx
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          builder: local-builder
+          platforms: linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            HA_VERSION=${{ env.HA_VERSION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Output final message
         run: |
