@@ -87,15 +87,24 @@ jobs:
           echo "SIZE_REDUCTION=${REDUCTION}%" >> $GITHUB_ENV
           echo "镜像大小减少: ${REDUCTION}%"
 
-      - name: Create builder with docker driver
+      - name: Check and create builder with docker driver
         run: |
-          docker buildx create --use --driver docker --name local-builder
+          # Check if a builder with docker driver already exists
+          if ! docker buildx inspect default | grep -q "Driver: docker"; then
+            # Create a new builder with docker driver if default doesn't use it
+            docker buildx create --use --driver docker --name local-builder
+            echo "BUILDER_NAME=local-builder" >> $GITHUB_ENV
+          else
+            # Use the default builder if it already uses docker driver
+            docker buildx use default
+            echo "BUILDER_NAME=default" >> $GITHUB_ENV
+          fi
 
       - name: Build and push Docker image using buildx
         uses: docker/build-push-action@v5
         with:
           context: .
-          builder: local-builder
+          builder: ${{ env.BUILDER_NAME }}
           platforms: linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
