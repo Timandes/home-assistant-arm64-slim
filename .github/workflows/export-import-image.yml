@@ -1,4 +1,4 @@
-name: Export and Import Home Assistant ARM64 Image
+name: Build and Push Home Assistant ARM64 Slim Image
 
 on:
   workflow_dispatch:
@@ -11,21 +11,16 @@ on:
 
 env:
   HA_VERSION: ${{ inputs.ha_version }}
-  IMAGE_NAME: home-assistant-arm64-slim
 
 jobs:
-  export-import:
+  build-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Set GitHub Container Registry image name
-        run: |
-          # Use the full repository name to avoid organization package issues
-          REPO_NAME=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')
-          echo "GHCR_IMAGE_NAME=ghcr.io/${REPO_NAME}" >> $GITHUB_ENV
-          echo "GHCR image name set to: ghcr.io/${REPO_NAME}"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -37,52 +32,40 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull Home Assistant ARM64 image
-        run: |
-          docker pull --platform linux/arm64 ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }}
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=${{ env.HA_VERSION }}
+            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Get original image size
         run: |
+          docker pull --platform linux/arm64 ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }}
           ORIGINAL_SIZE=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }} | tail -n 1 | awk '{print $2}')
           echo "ORIGINAL_SIZE=${ORIGINAL_SIZE}" >> $GITHUB_ENV
           echo "原始镜像大小: ${ORIGINAL_SIZE}"
 
-      - name: Start container and get container ID
-        run: |
-          CONTAINER_ID=$(docker run --platform linux/arm64 -d ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }} sleep infinity)
-          echo "CONTAINER_ID=${CONTAINER_ID}" >> $GITHUB_ENV
-          echo "Started container with ID: ${CONTAINER_ID}"
-
-      - name: Export container to tar file
-        run: |
-          docker export ${CONTAINER_ID} > ${{ env.IMAGE_NAME }}_${{ env.HA_VERSION }}.tar
-          echo "Exported container to ${{ env.IMAGE_NAME }}_${{ env.HA_VERSION }}.tar"
-
-      - name: Stop and remove container
-        run: |
-          docker stop ${CONTAINER_ID}
-          docker rm ${CONTAINER_ID}
-          echo "Stopped and removed container"
-
-      - name: Import tar as new image
-        run: |
-          docker import ${{ env.IMAGE_NAME }}_${{ env.HA_VERSION }}.tar ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}
-          echo "Imported tar as ${{ env.IMAGE_NAME }}_${{ env.HA_VERSION }}.tar as ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}"
-      
-      - name: Tag image for GitHub Container Registry
-        run: |
-          docker tag ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }} ${{ env.GHCR_IMAGE_NAME }}:${{ env.HA_VERSION }}
-          echo "Tagged image as ${{ env.GHCR_IMAGE_NAME }}:${{ env.HA_VERSION }}"
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          platforms: linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            HA_VERSION=${{ env.HA_VERSION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Get new image size
         run: |
-          NEW_SIZE=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }} | tail -n 1 | awk '{print $2}')
+          NEW_SIZE=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" ghcr.io/${{ github.repository }}:${{ env.HA_VERSION }} | tail -n 1 | awk '{print $2}')
           echo "NEW_SIZE=${NEW_SIZE}" >> $GITHUB_ENV
           echo "新镜像大小: ${NEW_SIZE}"
-
-      - name: Verify imported image
-        run: |
-          docker images ${{ env.IMAGE_NAME }}:${{ env.HA_VERSION }}
 
       - name: Calculate size reduction percentage
         run: |
@@ -94,10 +77,5 @@ jobs:
           REDUCTION=$(echo "scale=2; ((${ORIGINAL_SIZE_BYTES} - ${NEW_SIZE_BYTES}) * 100) / ${ORIGINAL_SIZE_BYTES}" | bc)
           echo "SIZE_REDUCTION=${REDUCTION}%" >> $GITHUB_ENV
           echo "镜像大小减少: ${REDUCTION}%"
-
-      - name: Push image to GitHub Container Registry
-        run: |
-          docker push ${{ env.GHCR_IMAGE_NAME }}:${{ env.HA_VERSION }}
-          echo "Pushed image to ${{ env.GHCR_IMAGE_NAME }}:${{ env.HA_VERSION }}"
           echo "镜像已推送到GitHub Container Registry，可以使用以下命令拉取："
-          echo "docker pull ${{ env.GHCR_IMAGE_NAME }}:${{ env.HA_VERSION }}"
+          echo "docker pull ghcr.io/${{ github.repository }}:${{ env.HA_VERSION }}"
