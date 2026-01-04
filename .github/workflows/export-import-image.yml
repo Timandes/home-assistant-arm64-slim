@@ -54,10 +54,17 @@ jobs:
           echo "CONTAINER_ID=${CONTAINER_ID}" >> $GITHUB_ENV
           echo "Started container with ID: ${CONTAINER_ID}"
 
+      - name: Wait for container to be ready
+        run: |
+          sleep 10
+          echo "Container is ready"
+
       - name: Remove packages from container
         run: |
-          docker exec ${CONTAINER_ID} uv pip uninstall AEMET-OpenData
-          echo "Removed packages in requirement_all.txt"
+          docker exec ${CONTAINER_ID} pip uninstall -y AEMET-OpenData || echo "AEMET-OpenData not found"
+          docker exec ${CONTAINER_ID} pip uninstall -y AIOSomecomfort || echo "AIOSomecomfort not found"
+          docker exec ${CONTAINER_ID} pip uninstall -y Adax-local || echo "Adax-local not found"
+          echo "Removed packages: AEMET-OpenData, AIOSomecomfort, Adax-local"
 
       - name: Export container to tar file
         run: |
