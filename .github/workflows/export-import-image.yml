@@ -50,7 +50,7 @@ jobs:
 
       - name: Start container and get container ID
         run: |
-          CONTAINER_ID=$(docker run --platform linux/arm64 -d ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }} sleep infinity)
+          CONTAINER_ID=$(docker run --platform linux/arm64 -d ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }} uv pip uninstall HueBLE PSNAWP Pillow)
           echo "CONTAINER_ID=${CONTAINER_ID}" >> $GITHUB_ENV
           echo "Started container with ID: ${CONTAINER_ID}"
 
