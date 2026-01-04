@@ -234,14 +234,12 @@ jobs:
           uv pip uninstall asyncpysupla
           uv pip uninstall asyncsleepiq
           uv pip uninstall asyncssh
-          uv pip uninstall # atenpdu
           uv pip uninstall auroranoaa
           uv pip uninstall aurorapy
           uv pip uninstall autarco
           uv pip uninstall automower-ble
           uv pip uninstall av
           uv pip uninstall avea
-          uv pip uninstall # avion
           uv pip uninstall axis
           uv pip uninstall ayla-iot-unofficial
           uv pip uninstall azure-eventhub
@@ -255,7 +253,6 @@ jobs:
           uv pip uninstall base36
           uv pip uninstall batinfo
           uv pip uninstall beautifulsoup4
-          uv pip uninstall # beewi-smartclim
           uv pip uninstall bimmer-connected[china]
           uv pip uninstall bizkaibus
           uv pip uninstall bleak-esphome
@@ -354,7 +351,6 @@ jobs:
           uv pip uninstall essent-dynamic-pricing
           uv pip uninstall eternalegypt
           uv pip uninstall eufylife-ble-client
-          uv pip uninstall # evdev
           uv pip uninstall evohome-async
           uv pip uninstall evolutionhttp
           uv pip uninstall faadelays
