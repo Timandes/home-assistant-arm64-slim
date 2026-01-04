@@ -50,13 +50,14 @@ jobs:
 
       - name: Start container and get container ID
         run: |
-          CONTAINER_ID=$(docker run --platform linux/arm64 -d ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }} sleep infinity)
+          CONTAINER_ID=$(docker run --platform linux/arm64 -d --entrypoint tail ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }} -f /dev/null)
           echo "CONTAINER_ID=${CONTAINER_ID}" >> $GITHUB_ENV
           echo "Started container with ID: ${CONTAINER_ID}"
 
       - name: Wait for container to be ready
         run: |
-          sleep 10
+          sleep 5
+          docker inspect --format='{{.State.Status}}' ${CONTAINER_ID}
           echo "Container is ready"
 
       - name: Remove packages from container
