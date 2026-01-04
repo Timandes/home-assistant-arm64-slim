@@ -56,7 +56,7 @@ jobs:
 
       - name: Remove packages from container
         run: |
-          docker exec -it ${CONTAINER_ID} uv pip uninstall AEMET-OpenData
+          docker exec ${CONTAINER_ID} uv pip uninstall AEMET-OpenData
           echo "Removed packages in requirement_all.txt"
 
       - name: Export container to tar file
