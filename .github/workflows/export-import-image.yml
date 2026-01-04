@@ -55,9 +55,9 @@ jobs:
         run: |
           cat > uninstall.sh << 'EOF'
           #!/bin/bash
-          uv pip uninstall -y HueBLE
-          uv pip uninstall -y PSNAWP
-          uv pip uninstall -y Pillow
+          uv pip uninstall --yes HueBLE
+          uv pip uninstall --yes PSNAWP
+          uv pip uninstall --yes Pillow
           EOF
           chmod +x uninstall.sh
           echo "Created uninstall script"
