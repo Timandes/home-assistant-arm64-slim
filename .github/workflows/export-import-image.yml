@@ -84,7 +84,6 @@ jobs:
           uv pip uninstall HueBLE
           uv pip uninstall Mastodon.py
           uv pip uninstall PSNAWP
-          uv pip uninstall Pillow
           uv pip uninstall PlexAPI
           uv pip uninstall ProgettiHWSW
           uv pip uninstall PyChromecast
@@ -108,7 +107,6 @@ jobs:
           uv pip uninstall RachioPy
           uv pip uninstall RestrictedPython
           uv pip uninstall RtmAPI
-          uv pip uninstall SQLAlchemy
           uv pip uninstall Tami4EdgeAPI
           uv pip uninstall TravisPy
           uv pip uninstall TwitterAPI
@@ -146,7 +144,6 @@ jobs:
           uv pip uninstall aiocomelit
           uv pip uninstall aiodhcpwatcher
           uv pip uninstall aiodiscover
-          uv pip uninstall aiodns
           uv pip uninstall aiodukeenergy
           uv pip uninstall aioeafm
           uv pip uninstall aioeagle
@@ -160,7 +157,6 @@ jobs:
           uv pip uninstall aiogithubapi
           uv pip uninstall aioguardian
           uv pip uninstall aioharmony
-          uv pip uninstall aiohasupervisor
           uv pip uninstall aiohomeconnect
           uv pip uninstall aiohomekit
           uv pip uninstall aiohttp_sse
@@ -184,7 +180,6 @@ jobs:
           uv pip uninstall aionut
           uv pip uninstall aioonkyo
           uv pip uninstall aioopenexchangerates
-          uv pip uninstall aiooui
           uv pip uninstall aiopegelonline
           uv pip uninstall aiopulse
           uv pip uninstall aiopurpleair
@@ -237,7 +232,6 @@ jobs:
           uv pip uninstall anova-wifi
           uv pip uninstall anthemav
           uv pip uninstall anthropic
-          uv pip uninstall anyio
           uv pip uninstall apple_weatherkit
           uv pip uninstall apprise
           uv pip uninstall aprslib
@@ -276,21 +270,14 @@ jobs:
           uv pip uninstall bimmer-connected[china]
           uv pip uninstall bizkaibus
           uv pip uninstall bleak-esphome
-          uv pip uninstall bleak-retry-connector
-          uv pip uninstall bleak
           uv pip uninstall blebox-uniapi
           uv pip uninstall blinkpy
           uv pip uninstall blockchain
           uv pip uninstall bluecurrent-api
           uv pip uninstall bluemaestro-ble
-          uv pip uninstall bluetooth-adapters
-          uv pip uninstall bluetooth-auto-recovery
-          uv pip uninstall bluetooth-data-tools
           uv pip uninstall bond-async
           uv pip uninstall bosch-alarm-mode2
           uv pip uninstall boschshcpy
-          uv pip uninstall boto3
-          uv pip uninstall botocore
           uv pip uninstall bring-api
           uv pip uninstall broadlink
           uv pip uninstall brother
@@ -313,13 +300,11 @@ jobs:
           uv pip uninstall connect-box
           uv pip uninstall construct
           uv pip uninstall cookidoo-api
-          uv pip uninstall cronsim
           uv pip uninstall crownstone-cloud
           uv pip uninstall crownstone-sse
           uv pip uninstall crownstone-uart
           uv pip uninstall datadog
           uv pip uninstall datapoint
-          uv pip uninstall dbus-fast
           uv pip uninstall debugpy
           uv pip uninstall decora-wifi
           uv pip uninstall deebot-client
@@ -387,7 +372,6 @@ jobs:
           uv pip uninstall flexit_bacnet
           uv pip uninstall flipr-api
           uv pip uninstall flux-led
-          uv pip uninstall fnv-hash-fast
           uv pip uninstall foobot_async
           uv pip uninstall forecast-solar
           uv pip uninstall fortiosapi
@@ -442,9 +426,7 @@ jobs:
           uv pip uninstall ha-philipsjs
           uv pip uninstall ha-silabs-firmware-client
           uv pip uninstall habiticalib
-          uv pip uninstall habluetooth
           uv pip uninstall hanna-cloud
-          uv pip uninstall hass-nabucasa
           uv pip uninstall hass-splunk
           uv pip uninstall hassil
           uv pip uninstall hdate[astral]
@@ -601,7 +583,6 @@ jobs:
           uv pip uninstall onvif-zeep-async
           uv pip uninstall open-garage
           uv pip uninstall open-meteo
-          uv pip uninstall openai
           uv pip uninstall openerz-api
           uv pip uninstall openevsewifi
           uv pip uninstall openhomedevice
@@ -641,8 +622,6 @@ jobs:
           uv pip uninstall prometheus-client
           uv pip uninstall prowlpy
           uv pip uninstall proxmoxer
-          uv pip uninstall psutil-home-assistant
-          uv pip uninstall psutil
           uv pip uninstall pulsectl
           uv pip uninstall pushbullet.py
           uv pip uninstall pushover_complete
@@ -985,7 +964,6 @@ jobs:
           uv pip uninstall sensorpush-ble
           uv pip uninstall sensorpush-ha
           uv pip uninstall sensoterra
-          uv pip uninstall sentence-stream
           uv pip uninstall sentry-sdk
           uv pip uninstall sfrbox-api
           uv pip uninstall sharkiq
@@ -1124,7 +1102,6 @@ jobs:
           uv pip uninstall zabbix-utils
           uv pip uninstall zamg
           uv pip uninstall zcc-helper
-          uv pip uninstall zeroconf
           uv pip uninstall zeversolar
           uv pip uninstall zha
           uv pip uninstall zhong-hong-hvac
