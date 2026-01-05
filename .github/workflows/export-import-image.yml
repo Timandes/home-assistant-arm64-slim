@@ -1157,9 +1157,13 @@ jobs:
 
       - name: Import tar as new image
         run: |
+          # Re-extract ENTRYPOINT to ensure we have the raw JSON
+          ORIGINAL_ENTRYPOINT=$(docker inspect --format='{{json .Config.Entrypoint}}' ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }})
+          
+          # Build the docker import command with proper JSON handling
           docker import --platform linux/arm64 \
             --change "WORKDIR ${{ env.ORIGINAL_WORKDIR }}" \
-            --change "${{ env.ENTRYPOINT_FOR_IMPORT }}" \
+            --change "ENTRYPOINT ${ORIGINAL_ENTRYPOINT}" \
             home-assistant-arm64-slim_${{ env.HA_VERSION }}.tar home-assistant-arm64-slim:${{ env.HA_VERSION }}
           echo "Imported tar as home-assistant-arm64-slim:${{ env.HA_VERSION }}"
 
