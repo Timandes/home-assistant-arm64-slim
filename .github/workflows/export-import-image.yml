@@ -62,6 +62,14 @@ jobs:
           ORIGINAL_ENTRYPOINT=$(docker inspect --format='{{json .Config.Entrypoint}}' ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }})
           echo "ORIGINAL_ENTRYPOINT=${ORIGINAL_ENTRYPOINT}" >> $GITHUB_ENV
           echo "原始 ENTRYPOINT: ${ORIGINAL_ENTRYPOINT}"
+          
+          # Process ENTRYPOINT for docker import --change
+          # The issue is that when we use --change "ENTRYPOINT ${{ env.ORIGINAL_ENTRYPOINT }}",
+          # the JSON string gets treated as a single argument instead of being parsed as JSON.
+          # Solution: create a properly formatted string that docker import can use.
+          ENTRYPOINT_FOR_IMPORT="ENTRYPOINT ${ORIGINAL_ENTRYPOINT}"
+          echo "ENTRYPOINT_FOR_IMPORT=${ENTRYPOINT_FOR_IMPORT}" >> $GITHUB_ENV
+          echo "处理后的 ENTRYPOINT: ${ENTRYPOINT_FOR_IMPORT}"
 
       - name: Create uninstall script
         run: |
@@ -1152,7 +1160,7 @@ jobs:
         run: |
           docker import --platform linux/arm64 \
             --change "WORKDIR ${{ env.ORIGINAL_WORKDIR }}" \
-            --change "ENTRYPOINT ${{ env.ORIGINAL_ENTRYPOINT }}" \
+            --change "${{ env.ENTRYPOINT_FOR_IMPORT }}" \
             home-assistant-arm64-slim_${{ env.HA_VERSION }}.tar home-assistant-arm64-slim:${{ env.HA_VERSION }}
           echo "Imported tar as home-assistant-arm64-slim:${{ env.HA_VERSION }}"
 
