@@ -978,7 +978,6 @@ jobs:
           uv pip uninstall satel-integra
           uv pip uninstall screenlogicpy
           uv pip uninstall scsgate
-          uv pip uninstall securetar
           uv pip uninstall sendgrid
           uv pip uninstall sense-energy
           uv pip uninstall sensirion-ble
