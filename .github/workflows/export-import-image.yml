@@ -473,7 +473,6 @@ jobs:
           uv pip uninstall icalendar
           uv pip uninstall icmplib
           uv pip uninstall idasen-ha
-          uv pip uninstall ifaddr
           uv pip uninstall iglo
           uv pip uninstall igloohome-api
           uv pip uninstall ihcsdk
