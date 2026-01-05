@@ -51,6 +51,18 @@ jobs:
           echo "ORIGINAL_SIZE=${ORIGINAL_SIZE}" >> $GITHUB_ENV
           echo "原始镜像大小: ${ORIGINAL_SIZE}"
 
+      - name: Extract original image metadata
+        run: |
+          # Extract WORKDIR from original image
+          ORIGINAL_WORKDIR=$(docker inspect --format='{{.Config.WorkingDir}}' ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }})
+          echo "ORIGINAL_WORKDIR=${ORIGINAL_WORKDIR}" >> $GITHUB_ENV
+          echo "原始 WORKDIR: ${ORIGINAL_WORKDIR}"
+          
+          # Extract ENTRYPOINT from original image
+          ORIGINAL_ENTRYPOINT=$(docker inspect --format='{{json .Config.Entrypoint}}' ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }})
+          echo "ORIGINAL_ENTRYPOINT=${ORIGINAL_ENTRYPOINT}" >> $GITHUB_ENV
+          echo "原始 ENTRYPOINT: ${ORIGINAL_ENTRYPOINT}"
+
       - name: Create uninstall script
         run: |
           cat > uninstall.sh << 'EOF'
@@ -1138,7 +1150,10 @@ jobs:
 
       - name: Import tar as new image
         run: |
-          docker import --platform linux/arm64 home-assistant-arm64-slim_${{ env.HA_VERSION }}.tar home-assistant-arm64-slim:${{ env.HA_VERSION }}
+          docker import --platform linux/arm64 \
+            --change "WORKDIR ${{ env.ORIGINAL_WORKDIR }}" \
+            --change "ENTRYPOINT ${{ env.ORIGINAL_ENTRYPOINT }}" \
+            home-assistant-arm64-slim_${{ env.HA_VERSION }}.tar home-assistant-arm64-slim:${{ env.HA_VERSION }}
           echo "Imported tar as home-assistant-arm64-slim:${{ env.HA_VERSION }}"
 
       - name: Get new image size
