@@ -1138,7 +1138,7 @@ jobs:
 
       - name: Import tar as new image
         run: |
-          docker import home-assistant-arm64-slim_${{ env.HA_VERSION }}.tar home-assistant-arm64-slim:${{ env.HA_VERSION }}
+          docker import --platform linux/arm64 home-assistant-arm64-slim_${{ env.HA_VERSION }}.tar home-assistant-arm64-slim:${{ env.HA_VERSION }}
           echo "Imported tar as home-assistant-arm64-slim:${{ env.HA_VERSION }}"
 
       - name: Get new image size
