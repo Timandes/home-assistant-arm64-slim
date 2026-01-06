@@ -203,7 +203,6 @@ uv pip uninstall bthome-ble
 uv pip uninstall bthomehub5-devicelist
 uv pip uninstall btsmarthub-devicelist
 uv pip uninstall buienradar
-uv pip uninstall cached-ipaddress
 uv pip uninstall caldav
 uv pip uninstall ciscomobilityexpress
 uv pip uninstall clearpasspy
