@@ -128,7 +128,6 @@ uv pip uninstall aiotankerkoenig
 uv pip uninstall aiotedee
 uv pip uninstall aiotractive
 uv pip uninstall aiounifi
-uv pip uninstall aiousbwatcher
 uv pip uninstall aiovlc
 uv pip uninstall aiovodafone
 uv pip uninstall aiowaqi
@@ -164,7 +163,6 @@ uv pip uninstall arcam-fmj
 uv pip uninstall arris-tg2492lg
 uv pip uninstall asmog
 uv pip uninstall asusrouter
-uv pip uninstall async-upnp-client
 uv pip uninstall asyncarve
 uv pip uninstall asyncinotify
 uv pip uninstall asyncpysupla
@@ -316,7 +314,6 @@ uv pip uninstall getmac
 uv pip uninstall gios
 uv pip uninstall gitterpy
 uv pip uninstall glances-api
-uv pip uninstall go2rtc-client
 uv pip uninstall goalzero
 uv pip uninstall goodwe
 uv pip uninstall google-api-python-client
@@ -342,7 +339,6 @@ uv pip uninstall growattServer
 uv pip uninstall gspread
 uv pip uninstall guppy3
 uv pip uninstall h2
-uv pip uninstall ha-ffmpeg
 uv pip uninstall ha-iotawattpy
 uv pip uninstall ha-philipsjs
 uv pip uninstall ha-silabs-firmware-client
@@ -459,7 +455,6 @@ uv pip uninstall motioneye-client
 uv pip uninstall mozart-api
 uv pip uninstall mullvad-api
 uv pip uninstall music-assistant-client
-uv pip uninstall mutagen
 uv pip uninstall mutesync
 uv pip uninstall mvg
 uv pip uninstall mypermobil
