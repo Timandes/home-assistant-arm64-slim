@@ -65,7 +65,6 @@ uv pip uninstall aiobafi6
 uv pip uninstall aiobotocore
 uv pip uninstall aiocomelit
 uv pip uninstall aiodhcpwatcher
-uv pip uninstall aiodiscover
 uv pip uninstall aiodukeenergy
 uv pip uninstall aioeafm
 uv pip uninstall aioeagle
