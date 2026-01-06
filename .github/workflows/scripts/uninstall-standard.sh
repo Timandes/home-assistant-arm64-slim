@@ -15,7 +15,6 @@ uv pip uninstall PyFlume
 uv pip uninstall PyFronius
 uv pip uninstall PyLoadAPI
 uv pip uninstall PyMetEireann
-uv pip uninstall PyMetno
 uv pip uninstall PyMicroBot
 uv pip uninstall PyRMVtransport
 uv pip uninstall PySrDaliGateway
@@ -292,7 +291,6 @@ uv pip uninstall freesms
 uv pip uninstall fressnapftracker
 uv pip uninstall fritzconnection[qr]
 uv pip uninstall fyta_cli
-uv pip uninstall gTTS
 uv pip uninstall gardena-bluetooth
 uv pip uninstall gassist-text
 uv pip uninstall gcal-sync
@@ -826,7 +824,6 @@ uv pip uninstall qbusmqttapi
 uv pip uninstall qingping-ble
 uv pip uninstall qnapstats
 uv pip uninstall quantum-gateway
-uv pip uninstall radios
 uv pip uninstall radiotherm
 uv pip uninstall raincloudy
 uv pip uninstall rapt-ble
