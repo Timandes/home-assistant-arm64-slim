@@ -1,0 +1,146 @@
+name: Build and Push Home Assistant ARM64 Minimal Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      ha_version:
+        description: 'Home Assistant version tag (e.g., 2025.12.5)'
+        required: true
+        default: '2025.12.5'
+        type: string
+
+env:
+  HA_VERSION: ${{ inputs.ha_version }}
+  IMAGE_SUFFIX: minimal
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=${{ env.HA_VERSION }}-${{ env.IMAGE_SUFFIX }}
+            type=raw,value=${{ env.IMAGE_SUFFIX }}-latest,enable={{is_default_branch}}
+
+      - name: Pull original image and get size
+        run: |
+          docker pull --platform linux/arm64 ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }}
+          ORIGINAL_SIZE=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }} | tail -n 1 | awk '{print $2}')
+          echo "ORIGINAL_SIZE=${ORIGINAL_SIZE}" >> $GITHUB_ENV
+          echo "原始镜像大小: ${ORIGINAL_SIZE}"
+
+      - name: Extract original image metadata
+        run: |
+          # Extract WORKDIR from original image
+          ORIGINAL_WORKDIR=$(docker inspect --format='{{.Config.WorkingDir}}' ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }})
+          echo "ORIGINAL_WORKDIR=${ORIGINAL_WORKDIR}" >> $GITHUB_ENV
+          echo "原始 WORKDIR: ${ORIGINAL_WORKDIR}"
+          
+          # Extract ENTRYPOINT from original image
+          ORIGINAL_ENTRYPOINT=$(docker inspect --format='{{json .Config.Entrypoint}}' ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }})
+          echo "ORIGINAL_ENTRYPOINT=${ORIGINAL_ENTRYPOINT}" >> $GITHUB_ENV
+          echo "原始 ENTRYPOINT: ${ORIGINAL_ENTRYPOINT}"
+          
+          # Process ENTRYPOINT for docker import --change
+          # The issue is that when we use --change "ENTRYPOINT ${{ env.ORIGINAL_ENTRYPOINT }}",
+          # the JSON string gets treated as a single argument instead of being parsed as JSON.
+          # Solution: create a properly formatted string that docker import can use.
+          ENTRYPOINT_FOR_IMPORT="ENTRYPOINT ${ORIGINAL_ENTRYPOINT}"
+          echo "ENTRYPOINT_FOR_IMPORT=${ENTRYPOINT_FOR_IMPORT}" >> $GITHUB_ENV
+          echo "处理后的 ENTRYPOINT: ${ENTRYPOINT_FOR_IMPORT}"
+
+
+      - name: Run container and execute uninstall script
+        run: |
+          docker run --platform linux/arm64 -v $(pwd)/.github/workflows/scripts/uninstall-${IMAGE_SUFFIX}.sh:/uninstall.sh --name ha-temp ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }} /bin/bash /uninstall.sh
+          CONTAINER_ID=ha-temp
+          echo "CONTAINER_ID=${CONTAINER_ID}" >> $GITHUB_ENV
+          echo "Uninstall script completed successfully"
+
+      - name: Export container to tar file
+        run: |
+          docker export ${CONTAINER_ID} > home-assistant-arm64-${IMAGE_SUFFIX}_${{ env.HA_VERSION }}.tar
+          echo "Exported container to home-assistant-arm64-${IMAGE_SUFFIX}_${{ env.HA_VERSION }}.tar"
+
+      - name: Stop and remove container
+        run: |
+          docker stop ${CONTAINER_ID}
+          docker rm ${CONTAINER_ID}
+          echo "Stopped and removed container"
+
+      - name: Import tar as new image
+        run: |
+          # Re-extract ENTRYPOINT to ensure we have the raw JSON
+          ORIGINAL_ENTRYPOINT=$(docker inspect --format='{{json .Config.Entrypoint}}' ghcr.io/home-assistant/home-assistant:${{ env.HA_VERSION }})
+          
+          # Build the docker import command with proper JSON handling
+          docker import --platform linux/arm64 \
+            --change "WORKDIR ${{ env.ORIGINAL_WORKDIR }}" \
+            --change "ENTRYPOINT ${ORIGINAL_ENTRYPOINT}" \
+            home-assistant-arm64-${IMAGE_SUFFIX}_${{ env.HA_VERSION }}.tar home-assistant-arm64-slim:${{ env.HA_VERSION }}
+          echo "Imported tar as home-assistant-arm64-slim:${{ env.HA_VERSION }}"
+
+      - name: Get new image size
+        run: |
+          NEW_SIZE=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" home-assistant-arm64-slim:${{ env.HA_VERSION }} | tail -n 1 | awk '{print $2}')
+          echo "NEW_SIZE=${NEW_SIZE}" >> $GITHUB_ENV
+          echo "新镜像大小: ${NEW_SIZE}"
+
+      - name: Calculate size reduction percentage
+        run: |
+          # Convert sizes to bytes for calculation
+          ORIGINAL_SIZE_BYTES=$(echo "${{ env.ORIGINAL_SIZE }}" | sed 's/GB/*1024*1024*1024/g; s/MB/*1024*1024/g; s/KB/*1024/g; s/B//g' | bc)
+          NEW_SIZE_BYTES=$(echo "${{ env.NEW_SIZE }}" | sed 's/GB/*1024*1024*1024/g; s/MB/*1024*1024/g; s/KB/*1024/g; s/B//g' | bc)
+          
+          # Calculate percentage reduction
+          REDUCTION=$(echo "scale=2; ((${ORIGINAL_SIZE_BYTES} - ${NEW_SIZE_BYTES}) * 100) / ${ORIGINAL_SIZE_BYTES}" | bc)
+          echo "SIZE_REDUCTION=${REDUCTION}%" >> $GITHUB_ENV
+          echo "镜像大小减少: ${REDUCTION}%"
+
+      - name: Create builder with docker-container driver
+        run: |
+          # Create a new builder with docker-container driver
+          docker buildx create --use --driver docker-container --name container-builder
+          echo "BUILDER_NAME=container-builder" >> $GITHUB_ENV
+
+      - name: Tag and push local image directly
+        run: |
+          # Convert repository name to lowercase
+          REPO_NAME=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')
+          
+          # Tag the local image for GitHub Container Registry
+          docker tag home-assistant-arm64-${IMAGE_SUFFIX}:${{ env.HA_VERSION }} ghcr.io/${REPO_NAME}:${{ env.HA_VERSION }}-${{ env.IMAGE_SUFFIX }}
+          
+          # Push the image directly
+          docker push ghcr.io/${REPO_NAME}:${{ env.HA_VERSION }}-${{ env.IMAGE_SUFFIX }}
+          echo "Pushed image to GitHub Container Registry"
+          echo "镜像已推送到GitHub Container Registry，可以使用以下命令拉取："
+          echo "docker pull ghcr.io/${REPO_NAME}:${{ env.HA_VERSION }}-${{ env.IMAGE_SUFFIX }}"
+
+      - name: Output final message
+        run: |
+          echo "镜像已推送到GitHub Container Registry，可以使用以下命令拉取："
+          echo "docker pull ghcr.io/${{ github.repository }}:${{ env.HA_VERSION }}-${{ env.IMAGE_SUFFIX }}"
