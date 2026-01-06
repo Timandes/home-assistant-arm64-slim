@@ -25,7 +25,6 @@ uv pip uninstall PySwitchbot
 uv pip uninstall PySwitchmate
 uv pip uninstall PySyncThru
 uv pip uninstall PyTransportNSW
-uv pip uninstall PyTurboJPEG
 uv pip uninstall PyViCare
 uv pip uninstall PyXiaomiGateway
 uv pip uninstall RachioPy
@@ -175,7 +174,6 @@ uv pip uninstall auroranoaa
 uv pip uninstall aurorapy
 uv pip uninstall autarco
 uv pip uninstall automower-ble
-uv pip uninstall av
 uv pip uninstall avea
 uv pip uninstall axis
 uv pip uninstall ayla-iot-unofficial
@@ -361,7 +359,6 @@ uv pip uninstall hko
 uv pip uninstall hlk-sw16
 uv pip uninstall hole
 uv pip uninstall holidays
-uv pip uninstall home-assistant-intents
 uv pip uninstall homelink-integration-api
 uv pip uninstall homematicip
 uv pip uninstall horimote
