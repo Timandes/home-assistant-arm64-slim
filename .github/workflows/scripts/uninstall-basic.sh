@@ -351,7 +351,6 @@ uv pip uninstall ha-silabs-firmware-client
 uv pip uninstall habiticalib
 uv pip uninstall hanna-cloud
 uv pip uninstall hass-splunk
-uv pip uninstall hassil
 uv pip uninstall hdate[astral]
 uv pip uninstall heatmiserV3
 uv pip uninstall here-routing
@@ -362,7 +361,6 @@ uv pip uninstall hko
 uv pip uninstall hlk-sw16
 uv pip uninstall hole
 uv pip uninstall holidays
-uv pip uninstall home-assistant-frontend
 uv pip uninstall home-assistant-intents
 uv pip uninstall homelink-integration-api
 uv pip uninstall homematicip
@@ -491,7 +489,6 @@ uv pip uninstall nsapi
 uv pip uninstall nsw-fuel-api-client
 uv pip uninstall nuheat
 uv pip uninstall numato-gpio
-uv pip uninstall numpy
 uv pip uninstall nyt_games
 uv pip uninstall oasatelematics
 uv pip uninstall oauth2client
