@@ -17,7 +17,6 @@ uv pip uninstall PyLoadAPI
 uv pip uninstall PyMetEireann
 uv pip uninstall PyMetno
 uv pip uninstall PyMicroBot
-uv pip uninstall PyNaCl
 uv pip uninstall PyQRCode
 uv pip uninstall PyRMVtransport
 uv pip uninstall PySrDaliGateway
@@ -227,7 +226,6 @@ uv pip uninstall datapoint
 uv pip uninstall debugpy
 uv pip uninstall decora-wifi
 uv pip uninstall deebot-client
-uv pip uninstall defusedxml
 uv pip uninstall deluge-client
 uv pip uninstall demetriek
 uv pip uninstall denonavr
@@ -732,7 +730,6 @@ uv pip uninstall pysaunum
 uv pip uninstall pyschlage
 uv pip uninstall pysensibo
 uv pip uninstall pyserial-asyncio-fast
-uv pip uninstall pyserial
 uv pip uninstall pysesame2
 uv pip uninstall pyseventeentrack
 uv pip uninstall pysiaalarm
