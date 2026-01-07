@@ -95,7 +95,6 @@ uv pip uninstall aiomusiccast
 uv pip uninstall aionanoleaf
 uv pip uninstall aionotion
 uv pip uninstall aiontfy
-uv pip uninstall aionut
 uv pip uninstall aioonkyo
 uv pip uninstall aioopenexchangerates
 uv pip uninstall aiopegelonline
@@ -183,7 +182,6 @@ uv pip uninstall batinfo
 uv pip uninstall beautifulsoup4
 uv pip uninstall bimmer-connected[china]
 uv pip uninstall bizkaibus
-uv pip uninstall bleak-esphome
 uv pip uninstall blebox-uniapi
 uv pip uninstall blinkpy
 uv pip uninstall blockchain
@@ -566,7 +564,6 @@ uv pip uninstall pyanglianwater
 uv pip uninstall pyaprilaire
 uv pip uninstall pyatag
 uv pip uninstall pyatmo
-uv pip uninstall pyatv
 uv pip uninstall pyaussiebb
 uv pip uninstall pybalboa
 uv pip uninstall pybbox
@@ -581,7 +578,6 @@ uv pip uninstall pycketcasts
 uv pip uninstall pycmus
 uv pip uninstall pycomfoconnect
 uv pip uninstall pycoolmasternet-async
-uv pip uninstall pycountry
 uv pip uninstall pycsspeechtts
 uv pip uninstall pycync
 uv pip uninstall pydaikin
