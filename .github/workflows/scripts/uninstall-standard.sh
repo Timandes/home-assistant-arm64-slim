@@ -539,7 +539,6 @@ uv pip uninstall py-nextbusnext
 uv pip uninstall py-nightscout
 uv pip uninstall py-schluter
 uv pip uninstall py-sucks
-uv pip uninstall py-synologydsm-api
 uv pip uninstall pyAtome
 uv pip uninstall pyCEC
 uv pip uninstall pyControl4
