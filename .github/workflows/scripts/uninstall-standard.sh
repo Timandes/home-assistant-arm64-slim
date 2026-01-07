@@ -69,7 +69,6 @@ uv pip uninstall aioecowitt
 uv pip uninstall aioelectricitymaps
 uv pip uninstall aioemonitor
 uv pip uninstall aioesphomeapi
-uv pip uninstall aiofiles
 uv pip uninstall aioflo
 uv pip uninstall aioftp
 uv pip uninstall aiogithubapi
