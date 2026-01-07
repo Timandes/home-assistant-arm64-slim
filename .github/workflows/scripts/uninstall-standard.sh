@@ -68,7 +68,6 @@ uv pip uninstall aioeagle
 uv pip uninstall aioecowitt
 uv pip uninstall aioelectricitymaps
 uv pip uninstall aioemonitor
-uv pip uninstall aioesphomeapi
 uv pip uninstall aioflo
 uv pip uninstall aioftp
 uv pip uninstall aiogithubapi
@@ -107,9 +106,7 @@ uv pip uninstall aioraven
 uv pip uninstall aioridwell
 uv pip uninstall aioruckus
 uv pip uninstall aiorussound
-uv pip uninstall aioruuvigateway
 uv pip uninstall aiosenz
-uv pip uninstall aioshelly
 uv pip uninstall aioskybell
 uv pip uninstall aioslimproto
 uv pip uninstall aiosolaredge
@@ -261,7 +258,6 @@ uv pip uninstall epicstore-api
 uv pip uninstall epion
 uv pip uninstall epson-projector
 uv pip uninstall eq3btsmart
-uv pip uninstall esphome-dashboard-api
 uv pip uninstall essent-dynamic-pricing
 uv pip uninstall eternalegypt
 uv pip uninstall eufylife-ble-client
@@ -498,7 +494,6 @@ uv pip uninstall orvibo
 uv pip uninstall ourgroceries
 uv pip uninstall ovoenergy
 uv pip uninstall p1monitor
-uv pip uninstall paho-mqtt
 uv pip uninstall panacotta
 uv pip uninstall panasonic-viera
 uv pip uninstall pdunehd
@@ -626,7 +621,6 @@ uv pip uninstall pyicloud
 uv pip uninstall pyinsteon
 uv pip uninstall pyintesishome
 uv pip uninstall pyipma
-uv pip uninstall pyipp
 uv pip uninstall pyiqvia
 uv pip uninstall pyirishrail
 uv pip uninstall pyiskra
@@ -684,7 +678,6 @@ uv pip uninstall pyopnsense
 uv pip uninstall pyoppleio-legacy
 uv pip uninstall pyosoenergyapi
 uv pip uninstall pyotgw
-uv pip uninstall pyotp
 uv pip uninstall pyoverkiz
 uv pip uninstall pypalazzetti
 uv pip uninstall pypaperless
@@ -709,7 +702,6 @@ uv pip uninstall pyrecswitch
 uv pip uninstall pyrepetierng
 uv pip uninstall pyrisco
 uv pip uninstall pyrituals
-uv pip uninstall pyroute2
 uv pip uninstall pyrympro
 uv pip uninstall pysabnzbd
 uv pip uninstall pysaj
@@ -769,7 +761,6 @@ uv pip uninstall python-mystrom
 uv pip uninstall python-open-router
 uv pip uninstall python-opendata-transport
 uv pip uninstall python-opensky
-uv pip uninstall python-otbr-api
 uv pip uninstall python-overseerr
 uv pip uninstall python-picnic-api2
 uv pip uninstall python-pooldose
